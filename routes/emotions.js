@@ -15,24 +15,20 @@ var toBlob = function(data_uri, type) {
 
 /* GET home page. */
 router.post('/emotions/:datauri', function(req, res, next) {
-
-	console.log('what the fruit');
-
-	console.log(req.params.datauri.replace(/-/g, '\/'));
-	temp = toBlob(req.params.datauri.replace(/-/g, '\/'), "image/png");
-	/*$.ajax({
+	console.log('what');
+	$.ajax({
 		url: apiUrl, 
 		beforeSend: function (xhrObj){
 			xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
 			xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", config.get('emotion_key'));
 		},
 		type: "POST", 
-		data: toBlob(req.params[datauri].replace(/\-/g, '\/'), "image/png"), 
+		data: toBlob(req.params.datauri.replace(/\-/g, '\/'), "image/png"), 
 		processData: false
 	})
 	.done(function(response){
 		res.send(response);
-	});*/
+	});
 });
 
 router.get('/emotions/:something', function(req, res, next){
