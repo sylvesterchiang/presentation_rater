@@ -20,14 +20,14 @@ var onSuccess = function(stream){
 
 	var mediaRecorder = new MediaRecorder(stream);
 
-	$("#start").on('click', function(){
+	$("#nostart").on('click', function(){
 
 		mediaRecorder.start()
 		console.log('audio recording started');
 		console.log(mediaRecorder.state);
 	});
 
-	$("#stop").on('click', function(){
+	$("#nostop").on('click', function(){
 
 		//clearInterval(refreshIntervalId);
 
@@ -41,7 +41,8 @@ var onSuccess = function(stream){
 
 		var blob = new Blob(chunks, {'type': 'audio/ogg; codecs=opus'});
 		chunks = [];
-		var audioURL = window.URL.createObjectURL(blob);
+
+		callSpeechAPI(blob);
 
 	}
 

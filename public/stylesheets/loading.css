@@ -1,0 +1,67 @@
+body#background {
+  background: url('../images/transparent-slide.jpg') no-repeat 50% 50% fixed; 
+  background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  -webkit-background-size: cover;
+}
+.NormalCharacterStyle{  
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size : 38px;  
+	color : #0087FF;  
+	color : rgb(0, 135, 255);
+}
+
+.NormalCharacterStyle3{  
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size : 69px;  
+	opacity: 1;
+	color : #231F20;  
+	color : rgb(35, 31, 32);
+}
+
+.NormalCharacterStyle2{  
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+	font-size : 34px;  
+	color : #231F20;  
+	color : rgb(35, 31, 32);
+}
+
+.NormalCharacterStyle1{  
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size : 25px;  
+	color : #FFFFFF;  
+	color : rgb(255, 255, 255);
+}
+
+.image{  
+	background-image : url('../images/slide-meeting.jpg');  
+	background-repeat : no-repeat;
+}
+
+.st0{ 
+	border-style : Solid; 
+	border-color : #0087FF;  
+	border-color : rgba(0, 135, 255, 1);  
+	border-width : 1px;
+}
+
+.st1{  
+	background : #0087FF;  
+	background : rgba(0, 135, 255, 1);  
+	border-radius : 27px;  
+	-moz-border-radius : 27px;  
+	-webkit-border-radius : 27px;
+}
+
+.image1{  
+	position:relative;
+	z-index :1;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	width:100%;
+	max-height: 100%;
+	max-width:100%;
+}

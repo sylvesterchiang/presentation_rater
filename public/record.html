@@ -1,0 +1,129 @@
+<html>
+<head>
+</head>
+
+<body>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+<script src="javascripts/webcam.js"></script>
+<script src="javascripts/adapter.js"></script>
+<script src="javascripts/audio.js"></script>
+
+<div id="my_camera" style="width:320px; height:240px;"></div>
+<div id="my_result"></div>
+<button id="btn">CLICK HERE HA</button>
+<button id="start">S T A R T</button>
+<button id="stop">S T O P</button>
+
+<script language="JavaScript">
+
+	var emotion_list = [];
+	var position_list = [];
+	var refreshIntervalId;
+	var final_transcript;
+
+	var toBlob = function(data_uri, type) {
+	    var bytes = atob(data_uri.split(',')[1])
+	    var arr = new Uint8Array(bytes.length);
+	    for (var i = 0; i < bytes.length; i++) {
+	    	arr[i] = bytes.charCodeAt(i);
+	    }
+	  return new Blob([arr], { type: type || 'image/png' });
+	};
+
+	var two_line = /\n\n/g;
+	var one_line = /\n/g;
+	function linebreak(s) {
+	    return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+	}
+
+	var first_char = /\S/;
+	function capitalize(s) {
+	    return s.replace(first_char, function(m) { return m.toUpperCase(); });
+	}
+
+	if (!('webkitSpeechRecognition' in window)){
+		upgrade();
+	} else{
+		var recognition = new webkitSpeechRecognition();
+		recognition.continuous = true;
+		recognition.interimResults = true;
+
+		recognition.onresult=function(event){
+			var interim_transcript = '';
+
+			for (var i = event.resultIndex; i < event.results.length; i++){
+				if (event.results[i].isFinal){
+					final_transcript += event.results[i][0].transcript;
+				} else{
+					interim_transcript += event.results[i][0].transcript;
+				}
+			}
+
+			final_transcript = capitalize(final_transcript);
+			//interim_span.innerHTML = linebreak(interm_transcript);
+		};
+	}
+
+	var apiUrl = "https://api.projectoxford.ai/emotion/v1.0/recognize";
+	var apiKey = "b17f4f01d83f40d98380852bfcf3c6a9"
+
+    Webcam.attach( '#my_camera' );
+
+    //audio recordeing event handler
+    navigator.getUserMedia(constraints, onSuccess, onError);
+
+    function take_snapshot() {
+        Webcam.snap( function(data_uri) {
+            document.getElementById('my_result').innerHTML = '<img src="'+data_uri+'"/>';
+        } );
+    }
+
+    $("#btn").on('click', function(){
+    	callAPI(apiUrl, apiKey);
+    });
+
+    $("#start").on('click', function(){
+    	refreshIntervalId = setInterval(function(){
+    		callAPI(apiUrl, apiKey);
+    	}, 3000);
+
+    	final_transcript = '';
+    	recognition.lang = 'en-CA';
+    	recognition.start();
+    });
+
+    $("#stop").on('click', function(){
+    	clearInterval(refreshIntervalId);
+    	recognition.stop();
+    	console.log(final_transcript);
+    	total_words = final_transcript.split(' ');
+    	console.log(total_words.length);
+    });
+
+    function callAPI(apiUrl, apiKey){
+    	Webcam.snap(function(data_uri, canvas, context){
+	    	$.ajax({
+	    		url: apiUrl, 
+	    		beforeSend: function (xhrObj){
+					xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
+					xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
+				},
+	    		type: "POST", 
+	    		data: toBlob(data_uri, "image/png"), 
+	    		processData: false
+	    	})
+	    	.done(function(response){
+	    		console.log(response);
+	    		emotion_list.push(response[0].scores);
+	    		position_list.push(response[0].faceRectangle);
+	    	});
+	    });
+    }
+
+</script>
+
+<a href="javascript:void(take_snapshot())">Take Snapshot</a>
+
+</body>
+</html>
