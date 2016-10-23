@@ -27,6 +27,12 @@ body{
 	color : rgb(0, 135, 255);
 }
 
+.font2{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+	font-size : 20px;
+	color: black;
+}
+
 hr {
     display: block;
     margin-top: 0.5em;
