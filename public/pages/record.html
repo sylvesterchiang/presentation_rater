@@ -1,7 +1,5 @@
 <html>
 <head>
-	<link rel="stylesheet" href="stylesheets/record.css" />
-	<link rel="stylesheet" href="stylesheets/bootstrap.min.css" />
 </head>
 
 <body>
@@ -11,41 +9,11 @@
 <script src="javascripts/adapter.js"></script>
 <script src="javascripts/audio.js"></script>
 
-<div class="row black">
-	<div class="col-md-offset-2 col-md-8"> 
-	<div id="my_camera"></div>
-	</div>
-</div>
-
-<div class="container-fluid black">
-	<div clas="row" style="background-color:black;height:120px;">
-		
-		<div class="col-md-offset-5 col-md-2" style="background-image:url('images/whiterect.svg');background-repeat:no-repeat;height:107px;background-size:cover;top:-60px;padding-top:15px;">
-		
-			<div class="col-md-3 text-center" >
-				<img style="width:45px;padding-top:15px;padding-left:-9px;" src="images/Microphone_gray.svg" />
-			</div>
-			<div class="col-md-6 text-center" style="padding-right:15px;">
-				<div class="text-center" style='padding-left:5px;top:-5px;'>
-					<div class="img-circle blue-circle circle" id="shape">
-						<div class="play-button" id="play" style="float:center;"></div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-3 text-center">
-				<img style="width:45px;padding-top:15px;right:5px;" src="images/Video_Call_Filled.svg" />
-			</div>
-
-		</div>
-
-		<!-- analyze button -->
-		<div>
-			<a href="/analyze.html" id='analyze' class='btn feedback-button'>Get Feedback </a>
-		</div>
-	</div>
-</div>
-
-<!--<div class="black" style="width:100%;bottom:0px;height:100%;"></div>-->
+<div id="my_camera" style="width:320px; height:240px;"></div>
+<div id="my_result"></div>
+<button id="btn">CLICK HERE HA</button>
+<button id="start">S T A R T</button>
+<button id="stop">S T O P</button>
 
 <script language="JavaScript">
 
@@ -53,12 +21,6 @@
 	var position_list = [];
 	var refreshIntervalId;
 	var final_transcript;
-
-	var running = false;
-	var recording_done = false;
-
-	//hide feedback button
-	$("#analyze").toggle();
 
 	var toBlob = function(data_uri, type) {
 	    var bytes = atob(data_uri.split(',')[1])
@@ -117,45 +79,26 @@
         } );
     }
 
-    var swap = function(){
-    	if (recording_done == false && running==true) {
-    		$("#analyze").toggle(500);
-    		recording_done = true;
-    	}
-    	console.log('swap');
-    	$("#shape").toggleClass("blue-circle");
-	    $("#play").toggleClass("pause-button")
-	    $("#shape").toggleClass("red-circle");
-	    $("#play").toggleClass("play-button");
-	    running = !running;
-    }
+    $("#btn").on('click', function(){
+    	callAPI(apiUrl, apiKey);
+    });
 
-    $("#play").on('click', function(){
+    $("#start").on('click', function(){
+    	refreshIntervalId = setInterval(function(){
+    		callAPI(apiUrl, apiKey);
+    	}, 3000);
 
-    	if (running == true){
-    		//then pause
-    		clearInterval(refreshIntervalId);
-	    	recognition.stop();
-	    	console.log(final_transcript);
-	    	total_words = final_transcript.split(' ');
-	    	console.log(total_words.length);
+    	final_transcript = '';
+    	recognition.lang = 'en-CA';
+    	recognition.start();
+    });
 
-	    	//pause, then turn blue-circle, pause-button
-	    	swap()
-    	}
-    	else{
-    		//then play
-    		refreshIntervalId = setInterval(function(){
-	    		callAPI(apiUrl, apiKey);
-	    	}, 3000);
-
-	    	final_transcript = '';
-	    	recognition.lang = 'en-CA';
-	    	recognition.start();
-
-	    	//play, turn red-circle, play-button
-	    	swap()
-    	}
+    $("#stop").on('click', function(){
+    	clearInterval(refreshIntervalId);
+    	recognition.stop();
+    	console.log(final_transcript);
+    	total_words = final_transcript.split(' ');
+    	console.log(total_words.length);
     });
 
     function callAPI(apiUrl, apiKey){
@@ -179,6 +122,8 @@
     }
 
 </script>
+
+<a href="javascript:void(take_snapshot())">Take Snapshot</a>
 
 </body>
 </html>

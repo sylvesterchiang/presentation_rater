@@ -9,6 +9,8 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var emotions = require('./routes/emotions');
 var speech = require('./routes/speech');
+var record = require('./routes/record');
+var analyze = require('./routes/analyze');
 
 var app = express();
 
@@ -23,12 +25,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname + '/../public'));
 
+//app.use('/record', record);
+app.use('/record', express.static(__dirname + '/public'));
+app.use('/analyze', express.static(__dirname + '/public'));
 app.use('/', routes);
 app.use('/users', users);
-app.post('/emotions/:datauri', emotions);
-app.get('/emotions/:something', emotions);
-app.get('/speech', speech);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
