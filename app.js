@@ -28,8 +28,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname + '/../public'));
 
 //app.use('/record', record);
-app.use('/record', express.static(__dirname + '/public'));
+app.post('/analyze/:data', analyze);
 app.use('/analyze', express.static(__dirname + '/public'));
+app.use('/record', express.static(__dirname + '/public'));
 app.use('/', routes);
 app.use('/users', users);
 

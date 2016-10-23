@@ -1,6 +1,31 @@
 <html>
-<head></head>
+<head>
+	<link rel="stylesheet" href="stylesheets/bootstrap.min.css" />
+	<link rel="stylesheet" href="stylesheets/normalize.css" />
+	<link rel="stylesheet" href="stylesheets/analyze.css" />
+</head>
+
 <body>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+	<script>
+	function getUrlVars()
+	{
+	    var vars = [], hash;
+	    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	    for(var i = 0; i < hashes.length; i++)
+	    {
+	        hash = hashes[i].split('=');
+	        vars.push(hash[0]);
+	        vars[hash[0]] = hash[1];
+	    }
+	    return vars;
+	}
+
+	var querystring = getUrlVars();
+	console.log('what');
+	console.log(querystring);
+	</script>
 	HAHAHAHAHAHA
-</body>
+</body> 
 </html>

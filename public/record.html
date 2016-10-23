@@ -40,7 +40,7 @@
 
 		<!-- analyze button -->
 		<div>
-			<a href="/analyze.html" id='analyze' class='btn feedback-button'>Get Feedback </a>
+			<button id='analyze' class='btn feedback-button'>Get Feedback </button>>
 		</div>
 	</div>
 </div>
@@ -53,12 +53,26 @@
 	var position_list = [];
 	var refreshIntervalId;
 	var final_transcript;
+	var total_time=0;
+	var refreshInterval=1500;
 
 	var running = false;
 	var recording_done = false;
 
 	//hide feedback button
 	$("#analyze").toggle();
+
+	$("#analyze").on("click", function(){
+		$.post("/analyze/"+JSON.stringify({
+			'emotions': emotion_list, 
+			'positions': position_list, 
+			'text': final_transcript,
+			'time': total_time
+		}))
+		.success(function(data){
+			window.location = data;
+		});
+	});
 
 	var toBlob = function(data_uri, type) {
 	    var bytes = atob(data_uri.split(',')[1])
@@ -147,7 +161,7 @@
     		//then play
     		refreshIntervalId = setInterval(function(){
 	    		callAPI(apiUrl, apiKey);
-	    	}, 3000);
+	    	}, refreshInterval);
 
 	    	final_transcript = '';
 	    	recognition.lang = 'en-CA';
@@ -159,6 +173,7 @@
     });
 
     function callAPI(apiUrl, apiKey){
+    	total_time = total_time + refreshInterval;
     	Webcam.snap(function(data_uri, canvas, context){
 	    	$.ajax({
 	    		url: apiUrl, 
